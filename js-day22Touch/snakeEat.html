@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>贪吃蛇</title>
+		<style type="text/css">
+			#wrap{border: 1px solid black; margin: auto; font-size: 0px;}
+			#score{width: 95%; padding: 15px; font-size: 2rem; text-align: right;}
+			.col{width: 25px; height: 25px; border: 1px solid beige; background: bisque; display: inline-block; }
+			.col1{background:brown;}
+			.egg{background: darkgreen;}
+		</style>
+	</head>
+	<body>
+		<div id="wrap">
+			<div id="score">
+				得分：0
+			</div>
+			<div id="main"></div>
+		</div>
+	</body>
+	<script type="text/javascript">
+		//定义变量
+		var rowNum = 25;
+		var colNum = 20;
+		var x = 2; 
+		var y = 0;
+		var arr = [];
+		var snakeBody = [];
+		var speedTime = 300;
+		var score = 0;
+		
+		
+		//获取元素
+		var wrap = document.getElementById('wrap');
+		wrap.style.width = colNum * (25 + 2) + 'px';
+		var scoreDiv = document.getElementById('score');
+		var main = document.getElementById('main');
+	
+		
+		//画布
+		function mainDiv(){
+			
+			for(i=0; i<rowNum; i++){
+				var rowDiv = document.createElement('div');
+				main.appendChild(rowDiv);
+				var arrArray = [];
+				for(j=0; j<colNum; j++){
+					var colDiv = document.createElement('div');
+					colDiv.className = 'col';
+					rowDiv.appendChild(colDiv);
+					arrArray.push(colDiv);
+				}
+				arr.push(arrArray);
+			}
+		}
+		mainDiv();
+	
+		//初始蛇身
+		function snake(){
+			for(i=0; i<3; i++){
+				arr[0][i].className = 'col col1';
+				snakeBody.push(arr[0][i]);
+			}
+		}
+		snake();
+		
+		//随机
+		function random(max){
+			var ran = Math.floor(Math.random() * max);
+			return ran;
+		}
+		
+		function snakeEgg(){
+			eggX = random(colNum);
+			eggY = random(rowNum);
+			if(arr[eggY][eggX].className == 'col col1'){
+				snakeEgg();
+			}else{
+				arr[eggY][eggX].className = 'col egg';
+			}
+		}
+		snakeEgg();
+		
+		//滑动事件
+		var staX = 0;
+		var staY = 0;
+		var endX = 0;
+		var endY = 0;
+		var dec = 'right';
+		var aa = true;
+		
+		document.addEventListener('touchstart',function(){
+			console.log('str');
+			var ev = event;
+			var touch = ev.touches[0];
+			 startX = touch.clientX;
+			 startY = touch.clientY;
+		});
+		document.addEventListener('touchmove',function(){
+			var ev = event;
+			var touch = ev.touches[0];
+			 endX = touch.clientX;
+			 endY = touch.clientY;
+		
+		});
+		document.addEventListener('touchend',function(){
+			if(!aa){
+				return;
+			}
+			var ev = event;
+			var touch = ev.touches[0];
+			var disX = endX - startX;
+			var disY = endY - startY;
+			
+			if(disX > 0 && dec == 'left'){
+				return;
+			}
+			if(disX < 0 && dec == 'right'){
+				return;
+			}
+			if(disY > 0 && dec == 'up'){
+				return;
+			}
+			if(disY > 0 && dec == 'down'){
+				return;
+			}
+			
+			
+			
+			if(Math.abs(disX) > Math.abs(disY)){
+				if(disX > 0){
+					dec = 'right';
+				}else{
+					dec = 'left';
+				}
+			}else{
+				if(disY > 0){
+					dec = 'down';
+				}else{
+					dec = 'up';
+				}				
+			}
+			aa = false;
+			setTimeout(function(){
+				aa = true;
+			},speedTime);
+		
+		});
+			
+		//蛇移动
+		function snakeMove(){
+			timer = setInterval(function(){
+				switch (dec){
+					case 'left':
+						x--;
+						break;
+					case 'right':
+						x++;
+						break;
+					case 'up':
+						y--;
+						break;
+					case 'down':
+						y++;
+						break;
+				}
+				
+				
+				if(x < 0 || x>=colNum || y < 0 || y>=rowNum){
+					alert('game over');
+					clearInterval(timer);
+					return;
+				}
+				
+				for(i=0; i<snakeBody.length; i++){
+					if(arr[y][x]==snakeBody[i]){
+					alert('game over');
+					clearInterval(timer);
+					return;						
+					}
+				}
+				
+				
+				if(x==eggX && y==eggY){
+					arr[eggY][eggX].className = 'col col1';
+					snakeBody.push(arr[eggY][eggX]);
+					snakeEgg();
+					score++;
+					scoreDiv.innerHTML = '得分：' + score;
+				}else{	
+					snakeBody[0].className = 'col';
+					snakeBody.shift();
+					arr[y][x].className = 'col col1';
+					snakeBody.push(arr[y][x]);
+				}
+			},speedTime);
+		}
+		snakeMove();
+		  
+	</script>
+</html>

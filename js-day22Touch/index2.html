@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+	</body>
+	<script type="text/javascript">
+		var startX = 0;
+		var startY = 0;
+		var endX = 0;
+		var endY = 0;
+		
+		document.addEventListener('touchstart',function(){
+			var ev = event;
+			var touch = ev.touches[0];
+			startX = touch.pageX;
+			startY = touch.pageY;
+		});
+		
+		document.addEventListener('touchmove',function(){
+			var ev = event;
+			var touch = ev.touches[0];
+			endX = touch.pageX;
+			endY = touch.pageY;
+		});
+		
+		document.addEventListener('touchend',function(){
+			var event = event;
+			var x = endX - startX;
+			var y = endY - startY;
+			if(Math.abs(y) > Math.abs(x)){
+				console.log('up and down');
+				if(y>0){
+					console.log('down');	
+				}else{
+					console.log('up');	
+				}
+			}else{
+				console.log('left and right');
+				if(x>0){
+					console.log('right');						
+				}else{
+					console.log('left');						
+				}
+			}
+			
+		});
+		
+	</script>
+</html>

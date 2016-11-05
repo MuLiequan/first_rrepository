@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style type="text/css">
+			.mainDiv{width: 600px; height: 800px; border: 1px solid black; margin: auto; background: bisque; position: relative;}
+			.ball{width: 50px; height: 50px; background: blue; position: absolute; font-size: 2rem; color: white; text-align: center; line-height: 50px;}
+			.pai{width: 100px; height: 25px; background: gray; position: absolute; bottom: 0px; left: 250px;}
+			.men{width: 100%; height: 100%; background: burlywood; display: none; opacity: 0.75; position: absolute;}
+			button{width: 200px; height: 50px; position: absolute; top: 45%; left: 35%;font-size: 2rem; background: black; color: white;}
+			p{ position: absolute; top: 15%; left: 15%;font-size: 5rem; color: white;}
+		
+		</style>
+	</head>
+	<body>
+		<div class="mainDiv">
+			<div class="ball">0</div>
+			<div class="pai"></div>
+			<div class="men">
+				<p>game over!</p>
+				<button>开始</button>
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript">
+		var mainDiv = document.querySelector('.mainDiv');
+		var ball = document.querySelector('.ball');
+		var pai = document.querySelector('.pai');
+		var men = document.querySelector('.men');
+		var btn = document.getElementsByTagName('button')[0];
+		var speedTime = 10;
+		
+		
+		var speedX = 2;
+		var speedY = 3;
+		var x = 0;
+		var y = 0;
+		var aa = 50;
+		var bb = 25;
+		var score = 0;
+		var paiLeft = 250;
+		var paiBottom = 775;
+		
+		function ballMove(){
+			var timer = setInterval(function(){
+				x += speedX;
+				y += speedY;
+				ball.style.top = y +'px';
+				ball.style.left = x + 'px';
+				if(ball.offsetWidth +ball.offsetLeft >= mainDiv.offsetWidth || ball.offsetLeft <= 0){
+					speedX = -speedX;
+				}
+				if(ball.offsetTop <= 0){
+					speedY = -speedY;
+				}
+				if(ball.offsetHeight +ball.offsetTop >= pai.offsetTop && ball.offsetLeft + ball.offsetWidth > pai.offsetLeft && ball.offsetLeft < pai.offsetLeft + pai.offsetWidth ){
+					speedY = -speedY;
+					score++;
+					ball.innerHTML = score;
+				}
+				if(ball.offsetTop + ball.offsetWidth - 2  > pai.offsetTop){
+					men.style.display = 'block';
+					clearInterval(timer);
+					document.onkeydown = 'none';
+				}
+			},speedTime);
+		}
+		
+		ballMove();
+		document.onkeydown =keyDowm;
+		function keyDowm(){
+			var event = window.event || event;
+			switch(event.keyCode){
+				case 37:
+					if(pai.offsetLeft<=0){
+						return;
+					}else{
+						paiLeft -= aa;
+						pai.style.left = paiLeft + 'px';						
+					}
+					break;
+				case 39:
+					if(pai.offsetLeft + pai.offsetWidth +10  >= mainDiv.offsetWidth){
+						return;
+					}else{
+						paiLeft += aa;
+						pai.style.left = paiLeft + 'px';						
+					}
+					break;
+				case 38:
+					if(pai.offsetTop<=200){
+						return;
+					}else{
+						paiBottom -= bb;
+						pai.style.top = paiBottom + 'px';						
+					}
+					break;
+			}
+		}
+		btn.onclick = function(){
+				men.style.display = 'none';
+				x = 0;
+				y = 0;
+				score = 0;
+				aa = 50;
+				bb = 25;
+				ball.innerHTML = '0'	;
+				paiLeft = 250;
+				paiBottom = 775;
+
+				ball.style.left = x + 'px';		
+				ball.style.top = y +'px';
+				
+				pai.style.left = paiLeft +'px';						
+				pai.style.top =  paiBottom +'px';								
+				ballMove();	
+				document.onkeydown =keyDowm;
+		}
+	</script>
+</html>

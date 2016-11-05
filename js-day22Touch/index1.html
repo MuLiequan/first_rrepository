@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>触摸事件</title>
+	</head>
+	<body>
+	</body>
+	<script type="text/javascript">
+		var startX = 0;
+		var startY = 0;
+	
+		
+		document.addEventListener('touchstart',function(){
+			var e = event;
+			console.log('开始触摸');
+			var touch = e.touches[0];
+//			console.log(touch.clientX);
+//			console.log(touch.clientY);
+//			console.log(touch);
+			startX = touch.pageX;
+			startY = touch.pageY;
+		});
+		document.addEventListener('touchmove',function(){
+			var e = event;
+			console.log('触摸移动');
+			var touch = e.touches[0];
+			var touch1 = e.touches[1];
+			document.write(touch.clientX);
+			document.write(touch1.clientX);
+			var endx=touch.pageX;
+			var endy=touch.pageY;
+//			
+//			if(x != startX){
+//				console.log('左右移动');				
+//			}
+//			if(y != startY){
+//				console.log('上下移动');				
+//			}
+			
+			
+		});
+		document.addEventListener('touchend',function(){
+			var e = event;
+			console.log('结束触摸');
+			var touch = e.touches[0];
+			var x = touch.pageX;
+			var y = touch.pageY;
+			if(x != startX){
+				console.log('左右移动');				
+			}
+			if(y != startY){
+				console.log('上下移动');				
+			}			
+			
+			
+		});
+	</script>
+</html>
